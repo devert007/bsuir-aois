@@ -108,19 +108,18 @@ class Binary_operation:
 
         if exp1_int > exp2_int:
             shift = exp1_int - exp2_int
-            for i in range (0,shift-2,1):
+            for i in range (0,shift-1,1):
                 mant2 = '0'+ mant2 
             mant2 = '0' + mant2
             exp2_int = exp1_int
         
         elif exp2_int > exp1_int:
             shift = exp2_int - exp1_int
-            
-            for i in range (0,shift-2,1):
+            for i in range (0,shift-1,1):
                 mant1 = '0'+ mant1
             mant1 = '0' + mant1
             exp1_int = exp2_int
-
+        print (mant1,mant2)
         result_mant =self.binary_sum(mant1, mant2,max(len(mant1),len(mant2)))
         result_sign = sign1
         if len(result_mant) > max(len(mant1),len(mant2)):
