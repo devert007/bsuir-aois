@@ -92,7 +92,7 @@ class Binary_operation:
                     else:
                         result += '1'
                         carry = self.translator.get_binary(self.dec_translator.binary_to_decimal(carry) - self.dec_translator.binary_to_decimal(dir_value2))
-        result = result.lstrip('0.') #лишние нули в начале
+        result = result.lstrip('0') #лишние нули в начале
         return result_sign+result 
 
     def sum_float_binary(self,value1, value2):
@@ -119,7 +119,6 @@ class Binary_operation:
                 mant1 = '0'+ mant1
             mant1 = '0' + mant1
             exp1_int = exp2_int
-        print (mant1,mant2)
         result_mant =self.binary_sum(mant1, mant2,max(len(mant1),len(mant2)))
         result_sign = sign1
         if len(result_mant) > max(len(mant1),len(mant2)):
