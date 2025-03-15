@@ -88,23 +88,21 @@ class Logic_operator:
                 if char in self.letters_list:
                     stack.append(char)
                 elif char=='!':
-                    position_in_stack=1
-                    if count_operations==len(self.letters_list)-1:
-                        position_in_stack=0
+                    
 
-                    op1=int(val_dict[stack[position_in_stack]])
+                    op1=int(val_dict[stack[-1]])
                     if op1==1 : 
                         rez = "0" 
                     else: 
                         rez="1"
                     if stroka_number==1:
                         self.table.append([0]*(pow(2,len(self.letters_list))+1))
-                        self.table[len(self.table )-1][0]=char+stack[position_in_stack]
+                        self.table[len(self.table )-1][0]=char+stack[-1]
                     count_operations+=1
                     self.table[count_operations][stroka_number]=rez
                     val_dict[self.table[count_operations][0]]=self.table[count_operations][stroka_number]
-                    stack.append(char+stack[position_in_stack])
-                    stack.pop(position_in_stack)
+                    stack.append(char+stack[-1])
+                    stack.pop(-2)
                     
                 else:
                     op1=int(val_dict[stack[0]])
@@ -254,6 +252,7 @@ def main():
         else:
             print("Invalid choice! Please select 1-5")
 
-if __name__ == "__main__":
-    main()
+
+
+main()
 
