@@ -1,84 +1,84 @@
-class Translator_to_decimal:
+class Decimal_translate:
     def reverse(self,value):
         if value % 2 == 1:
             return 0
         else :
             return 1
 
-    def binary_to_decimal_fixed(self,binary_str):
-        if '.' in binary_str:
-            int_part,fract_part = binary_str.split('.') #разделим на две части 
+    def fixed_bin_to_dec(self,bin_str):
+        if '.' in bin_str:
+            int_part,fraction_part = bin_str.split('.') #разделим на две части 
         else :
-            int_part, fract_part = binary_str,False
+            int_part, fraction_part = bin_str,False
         
         degree=0
-        decimal_integer = 0
-        decimal_fraction = 0
+        dec_int = 0
+        dec_fraction = 0
         for i in range(len(int_part)-1,0,-1):
-            decimal_integer += int(int_part[i])*2**degree
+            dec_int += int(int_part[i])*2**degree
             degree+=1
-        if fract_part:
-            for i in range(len(fract_part)):
-                bit = fract_part[i] 
-                decimal_fraction += int(bit) * (0.5 ** (i + 1))
+        if fraction_part:
+            for i in range(len(fraction_part)):
+                bit = fraction_part[i] 
+                dec_fraction += int(bit) * (0.5 ** (i + 1))
 
-        return decimal_integer + decimal_fraction   
+        return dec_int + dec_fraction   
 
-    def binary_to_decimal(self,value):
+    def bin_to_dec(self,value):
         result =0
         degree=0
         for i in range(len(value)-1,-1,-1):
             result += int(value[i])*2**degree
             degree+=1
         return result
-    def binary_to_decimal_fixed(self,binary_str):
-        if '.' in binary_str:
-            int_part,fract_part = binary_str.split('.') #разделим на две части 
+    def fixed_bin_to_dec(self,bin_str):
+        if '.' in bin_str:
+            int_part,fraction_part = bin_str.split('.')
         else :
-            int_part, fract_part = binary_str,False
+            int_part, fraction_part = bin_str,False
         
         degree=0
-        decimal_integer = 0
-        decimal_fraction = 0
+        dec_int = 0
+        dec_fraction = 0
         for i in range(len(int_part)-1,0,-1):
-            decimal_integer += int(int_part[i])*2**degree
+            dec_int += int(int_part[i])*2**degree
             degree+=1
-        if fract_part:
-            for i in range(len(fract_part)):
-                bit = fract_part[i] 
-                decimal_fraction += int(bit) * (0.5**(i + 1))
+        if fraction_part:
+            for i in range(len(fraction_part)):
+                bit = fraction_part[i] 
+                dec_fraction += int(bit) * (0.5**(i + 1))
 
-        return decimal_integer + decimal_fraction
+        return dec_int + dec_fraction
 
-    def direct_binary_to_decimal(self,value):
+    def direct_bin_to_dec(self,value):
         value_sign = value[0]
         result =0
         degree=0
         for i in range(len(value)-1,0,-1):
             result += int(value[i])*2**degree
             degree+=1
-        result_sign = '-' if value_sign=='1' else ''
-        return result_sign + str(result)
+        sign_result = '-' if value_sign=='1' else ''
+        return sign_result + str(result)
 
-    def reverse_binary_to_decimal(self,value):
+    def reverse_bin_to_dec(self,value):
         value_sign = value[0]
         result =0
         degree=0
         for i in range(len(value)-1,0,-1):
             result +=self.reverse(int(value[i]))*2**degree
             degree+=1
-        result_sign = '-' if value_sign=='1' else ''
-        return result_sign + str(result)
+        sign_result = '-' if value_sign=='1' else ''
+        return sign_result + str(result)
 
-    def additional_binary_to_decimal(self,value):
-        result= self.reverse_binary_to_decimal(value)
+    def additional_bin_to_dec(self,value):
+        result= self.reverse_bin_to_dec(value)
         if value[0]=='1':
             result=int(result)-1
         else:
             result=int(result)+1
         return str(result)
 
-    def binary_float_to_decimal(self,value):
+    def float_bin_to_dec(self,value):
         sign, exp, mant = value[0], value[1:9], value[9:]
         exp_int = int(exp,2)-127
         result_mant=0
