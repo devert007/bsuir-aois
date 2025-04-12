@@ -75,7 +75,7 @@ class Logic_operator:
             self.opz=self.opz+stack_list[-1]
             stack_list.pop()
         return self.opz
-
+     
     def create_truth_table(self):
         stack_list=[]
         val_dict={}
@@ -346,34 +346,7 @@ class Logic_operator:
         final_expression = "&".join(result_expr)
         print(final_expression)
         return final_expression
-        # print(self.get_sknf_maxterms())
-        # array_sdnf = self.get_sknf_maxterms()
-        # combined_set = set()
-        # new_terms_set = set()
-        # for i in range(0,len(array_sdnf),1):
-        #     for j in range(i+1,len(array_sdnf)-1,1):
-        #         term_1 = array_sdnf[i][0]
-        #         term_2 = array_sdnf[j][0]
-        #         diff = 0
-        #         diff_position = -1
-        #         for k in range(len(self.new_letters_list)):
-        #             if term_1[k] != term_2[k]:
-        #                 diff+=1
-        #                 diff_position = k
-        #         if diff == 1:
-        #             new_term = term_1.copy()
-        #             new_term[diff_position] = 'X'
-                    
-        #             combined_set.add(i)
-        #             combined_set.add(j)
-        #             new_terms_set.add(new_term)
-        # print (combined_set)
-        # result_set = new_terms_set.copy()
-        # for i in range(len(array_sdnf)):
-        #     if i not in combined_set:
-        #         result_set.add(array_sdnf[i])
-        # print(result_set)
-
+        
         pass
 
     # Расчетно-табличный метод для СДНФ
@@ -888,98 +861,98 @@ class Logic_operator:
         print(final_expr)
         return final_expr
 
-# def menu():
-#     print("\n=== Меню ===")
-#     print("1. Ввести функцию и вывести таблицу истинности")
-#     print("2. SDNF")
-#     print("3. SKNF")
-#     print("4. Индексная форма")
-#     print("5. Минимизировать СДНФ (расчетный метод)")
-#     print("6. Минимизировать СКНФ (расчетный метод)")
-#     print("7. Минимизировать СДНФ (расчетно-табличный)")
-#     print("8. Минимизировать СКНФ (расчетно-табличный)")
-#     print("9. Минимизировать СДНФ (Карта Карно)")
-#     print("10. Минимизировать СКНФ (Карта Карно)")
-#     print("11. Выйти")
-#     return input("ВВОД (1-11): ")
+def menu():
+    print("\n=== Меню ===")
+    print("1. Ввести функцию и вывести таблицу истинности")
+    print("2. SDNF")
+    print("3. SKNF")
+    print("4. Индексная форма")
+    print("5. Минимизировать СДНФ (расчетный метод)")
+    print("6. Минимизировать СКНФ (расчетный метод)")
+    print("7. Минимизировать СДНФ (расчетно-табличный)")
+    print("8. Минимизировать СКНФ (расчетно-табличный)")
+    print("9. Минимизировать СДНФ (Карта Карно)")
+    print("10. Минимизировать СКНФ (Карта Карно)")
+    print("11. Выйти")
+    return input("ВВОД (1-11): ")
 
-# def main():
-#     current_logic = None
+def main():
+    current_logic = None
     
-#     while True:
-#         choice = menu()
+    while True:
+        choice = menu()
         
-#         if choice == "1":
-#             expression = input("Введите функцию (используйте a,b,c,d,e и операторы &,|,>,!,~): ")
-#             try:
-#                 current_logic = Logic_operator(expression)
-#                 print("\nТаблица истинности создана!")
-#             except Exception as e:
-#                 print(f"Ошибка в выражении: {e}")
+        if choice == "1":
+            expression = input("Введите функцию (используйте a,b,c,d,e и операторы &,|,>,!,~): ")
+            try:
+                current_logic = Logic_operator(expression)
+                print("\nТаблица истинности создана!")
+            except Exception as e:
+                print(f"Ошибка в выражении: {e}")
                 
-#         elif choice == "2":
-#             if current_logic is None:
-#                 print("Сначала введите функцию")
-#             else:
-#                 sdnf = current_logic.build_sdnf_str()
-#                 print(f"SDNF: {sdnf}")
+        elif choice == "2":
+            if current_logic is None:
+                print("Сначала введите функцию")
+            else:
+                sdnf = current_logic.build_sdnf_str()
+                print(f"SDNF: {sdnf}")
                 
-#         elif choice == "3":
-#             if current_logic is None:
-#                 print("Сначала введите функцию")
-#             else:
-#                 sknf = current_logic.build_sknf_str()
-#                 print(f"SKNF: {sknf}")
+        elif choice == "3":
+            if current_logic is None:
+                print("Сначала введите функцию")
+            else:
+                sknf = current_logic.build_sknf_str()
+                print(f"SKNF: {sknf}")
                 
-#         elif choice == "4":
-#             if current_logic is None:
-#                 print("Сначала введите функцию")
-#             else:
-#                 index = current_logic.rez_index_form()
-#                 print(f"Индексная форма (Decimal): {index}")
+        elif choice == "4":
+            if current_logic is None:
+                print("Сначала введите функцию")
+            else:
+                index = current_logic.rez_index_form()
+                print(f"Индексная форма (Decimal): {index}")
                 
-#         elif choice == "5":
-#             if current_logic is None:
-#                 print("Сначала введите функцию")
-#             else:
-#                 current_logic.minimize_sdnf_raschetny()
+        elif choice == "5":
+            if current_logic is None:
+                print("Сначала введите функцию")
+            else:
+                current_logic.minimize_sdnf_raschetny()
                 
-#         elif choice == "6":
-#             if current_logic is None:
-#                 print("Сначала введите функцию")
-#             else:
-#                 current_logic.minimize_sknf_raschetny()
+        elif choice == "6":
+            if current_logic is None:
+                print("Сначала введите функцию")
+            else:
+                current_logic.minimize_sknf_raschetny()
                 
-#         elif choice == "7":
-#             if current_logic is None:
-#                 print("Сначала введите функцию")
-#             else:
-#                 current_logic.minimize_sdnf_raschet_table()
+        elif choice == "7":
+            if current_logic is None:
+                print("Сначала введите функцию")
+            else:
+                current_logic.minimize_sdnf_raschet_table()
                 
-#         elif choice == "8":
-#             if current_logic is None:
-#                 print("Сначала введите функцию")
-#             else:
-#                 current_logic.minimize_sknf_raschet_table()
+        elif choice == "8":
+            if current_logic is None:
+                print("Сначала введите функцию")
+            else:
+                current_logic.minimize_sknf_raschet_table()
                 
-#         elif choice == "9":
-#             if current_logic is None:
-#                 print("Сначала введите функцию")
-#             else:
-#                 current_logic.karnaugh_map_sdnf()
+        elif choice == "9":
+            if current_logic is None:
+                print("Сначала введите функцию")
+            else:
+                current_logic.karnaugh_map_sdnf()
                 
-#         elif choice == "10":
-#             if current_logic is None:
-#                 print("Сначала введите функцию")
-#             else:
-#                 current_logic.karnaugh_map_sknf()
+        elif choice == "10":
+            if current_logic is None:
+                print("Сначала введите функцию")
+            else:
+                current_logic.karnaugh_map_sknf()
                 
-#         elif choice == "11":
-#             print("Goodbye!")
-#             break
+        elif choice == "11":
+            print("Goodbye!")
+            break
             
-#         else:
-#             print("Неверный выбор! Выберите 1-11")
+        else:
+            print("Неверный выбор! Выберите 1-11")
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
