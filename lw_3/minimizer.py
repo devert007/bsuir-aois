@@ -74,7 +74,7 @@ class Minimizer:
     def minimize_sknf_raschetny(self, maxterms):
         current_terms = self._minimize_common(maxterms, False)
         print("\nMinimized SKNF:")
-        result_expr = []
+        sknf_result_expr = []
         for term in current_terms:
             term_str = []
             for i in range(len(term)):
@@ -84,8 +84,10 @@ class Minimizer:
                     self.letters_list[i] if term[i] == 0 else f"!{self.letters_list[i]}"
                 )
             if term_str:
-                result_expr.append("(" + "|".join(term_str) + ")")
-        final_expr = "&".join(result_expr) if result_expr else "1"
+                sknf_result_expr.append("(" + "|".join(term_str) + ")")
+        final_expr = "&".join(sknf_result_expr) if sknf_result_expr else "1"
+        self.result_sf=final_expr 
+        print(final_expr)
         return final_expr
 
     def _build_coverage_table(self, terms, original_terms):
@@ -263,11 +265,11 @@ class Minimizer:
         if kmap is None:
             return "0"
 
-        print("\nKarnaugh Map for SDNF:")
+        print("\Карта Карно для SDNF:")
         header = (
             f"{'':4} {col_vars[0]}=0 {col_vars[0]}=1" if self.n == 2
             else f"{'':4} {col_vars[0]}{col_vars[1]}=00 {col_vars[0]}{col_vars[1]}=01 {col_vars[0]}{col_vars[1]}=11 {col_vars[0]}{col_vars[1]}=10" if self.n <= 4
-            else f"{'':4} {col_vars[0]}{col_vars[1]}{col_vars[2]}=000 {col_vars[0]}{col_vars[1]}{col_vars[2]}=001 {col_vars[0]}{col_vars[1]}{col_vars[2]}=011 {col_vars[0]}{col_vars[1]}{col_vars[2]}=010 {col_vars[0]}{col_vars[1]}{col_vars[2]}=110 {col_vars[0]}{col_vars[1]}{col_vars[2]}=111 {col_vars[0]}{col_vars[1]}{col_vars[2]}=101 {col_vars[0]}{col_vars[1]}{col_vars[2]}=100"
+            else f"{'':4} {col_vars[0]}{col_vars[1]}{col_vars[2]}=000 {col_vars[0]}{col_vars[1]}{col_vars[2]}=001 {col_vars[0]}{col_vars[2]}=011 {col_vars[0]}{col_vars[2]}=010 {col_vars[0]}{col_vars[2]}=110 {col_vars[0]}{col_vars[2]}=111 {col_vars[0]}{col_vars[2]}=101 {col_vars[0]}{col_vars[2]}=100"
         )
         print(header)
         for i in range(rows):
@@ -277,29 +279,36 @@ class Minimizer:
             )
             print(f"{row_label:4} {' '.join(str(kmap[i][j]) for j in range(cols))}")
 
+        # Находим все возможные группы единиц
         groups = []
         covered = set()
-        for size in [8, 4, 2, 1]:
+        target = 1  # Для СДНФ ищем единицы
+        possible_sizes = [8, 4, 2, 1] if self.n > 2 else [4, 2, 1]
+        for size in possible_sizes:
             if size > rows * cols:
                 continue
-            for r in range(rows):
-                for c in range(cols):
-                    for h in [1, 2, 4] if size > 1 else [1]:
-                        for w in [size // h] if h * (size // h) == size else []:
-                            if r + h > rows or c + w > cols:
-                                continue
-                            ones = []
-                            for i in range(r, r + h):
-                                for j in range(c, c + w):
-                                    i_mod, j_mod = i % rows, j % cols
-                                    if kmap[i_mod][j_mod] == 1:
-                                        ones.append((i_mod, j_mod))
-                            if len(ones) == size and ones:
-                                new_coverage = set(ones) - covered
-                                if new_coverage:
-                                    groups.append(ones)
-                                    covered.update(ones)
-        final_expr=self.result_final_expr
+            for h in [1, 2, 4] if size > 1 else [1]:
+                for w in [size // h] if h * (size // h) == size else []:
+                    for r in range(rows):
+                        for c in range(cols):
+                            cells = set()
+                            valid = True
+                            for i in range(h):
+                                for j in range(w):
+                                    i_mod = (r + i) % rows
+                                    j_mod = (c + j) % cols
+                                    if kmap[i_mod][j_mod] != target:
+                                        valid = False
+                                        break
+                                    cells.add((i_mod, j_mod))
+                                if not valid:
+                                    break
+                            if valid and cells and len(cells) == size:
+                                if cells - covered:  # Добавляем, если покрывает новые клетки
+                                    groups.append(cells)
+                                    covered.update(cells)
+
+        # Формируем импликанты из групп
         result = []
         for group in groups:
             term = []
@@ -322,7 +331,8 @@ class Minimizer:
             if term:
                 result.append("(" + "&".join(term) + ")")
 
-        print("\nMinimized SDNF (Karnaugh Map):")
+        final_expr = "|".join(result) if result else "0"
+        print("\Минимизированная SDNF (Карта Карно):")
         print(final_expr)
         return final_expr
 
@@ -331,7 +341,7 @@ class Minimizer:
         if kmap is None:
             return "1"
 
-        print("\nKarnaugh Map for SKNF:")
+        print("\Карта Карно для SKNF:")
         header = (
             f"{'':4} {col_vars[0]}=0 {col_vars[0]}=1" if self.n == 2
             else f"{'':4} {col_vars[0]}{col_vars[1]}=00 {col_vars[0]}{col_vars[1]}=01 {col_vars[0]}{col_vars[1]}=11 {col_vars[0]}{col_vars[1]}=10" if self.n <= 4
@@ -345,29 +355,36 @@ class Minimizer:
             )
             print(f"{row_label:4} {' '.join(str(kmap[i][j]) for j in range(cols))}")
 
+        # Находим все возможные группы нулей
         groups = []
         covered = set()
-        for size in [8, 4, 2, 1]:
+        target = 0  # Для СКНФ ищем нули
+        possible_sizes = [8, 4, 2, 1] if self.n > 2 else [4, 2, 1]
+        for size in possible_sizes:
             if size > rows * cols:
                 continue
-            for r in range(rows):
-                for c in range(cols):
-                    for h in [1, 2, 4] if size > 1 else [1]:
-                        for w in [size // h] if h * (size // h) == size else []:
-                            if r + h > rows or c + w > cols:
-                                continue
-                            zeros = []
-                            for i in range(r, r + h):
-                                for j in range(c, c + w):
-                                    i_mod, j_mod = i % rows, j % cols
-                                    if kmap[i_mod][j_mod] == 0:
-                                        zeros.append((i_mod, j_mod))
-                            if len(zeros) == size and zeros:
-                                new_coverage = set(zeros) - covered
-                                if new_coverage:
-                                    groups.append(zeros)
-                                    covered.update(zeros)
+            for h in [1, 2, 4] if size > 1 else [1]:
+                for w in [size // h] if h * (size // h) == size else []:
+                    for r in range(rows):
+                        for c in range(cols):
+                            cells = set()
+                            valid = True
+                            for i in range(h):
+                                for j in range(w):
+                                    i_mod = (r + i) % rows
+                                    j_mod = (c + j) % cols
+                                    if kmap[i_mod][j_mod] != target:
+                                        valid = False
+                                        break
+                                    cells.add((i_mod, j_mod))
+                                if not valid:
+                                    break
+                            if valid and cells and len(cells) == size:
+                                if cells - covered:  # Добавляем, если покрывает новые клетки
+                                    groups.append(cells)
+                                    covered.update(cells)
 
+        # Формируем импликанты из групп
         result = []
         for group in groups:
             term = []
@@ -391,6 +408,6 @@ class Minimizer:
                 result.append("(" + "|".join(term) + ")")
 
         final_expr = "&".join(result) if result else "1"
-        print("\nMinimized SKNF (Karnaugh Map):")
+        print("\Минимизированная SKNF (Карта Карно):")
         print(final_expr)
         return final_expr
