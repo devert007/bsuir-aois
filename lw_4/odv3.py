@@ -11,17 +11,14 @@ class ODV_3:
         if  (i not in self.new_letters_list)&(i in self.letters_array):
             self.new_letters_list.append(i)
     self.truth_table = []
-    #заполняем нулями, пример: [a, 0,0,0,0,0]
     for i in range(0,len(self.new_letters_list),1):
         self.truth_table.append([0]*(pow(2,len(self.new_letters_list))+1))
         self.truth_table[i][0]=self.new_letters_list[i]
-    # print(f"Итоговая таблица с переменными:\n{''.join(self.new_letters_list)}")
 
     for i in range(0,pow(2,len(self.new_letters_list)),1):
           binary_value=self.get_binary_value(i,len(self.new_letters_list))
           bin_value = '0' if i%2==0 else '1'
           self.truth_table 
-          # print(binary_value)
           for j in range(0,len(self.new_letters_list),1):
               self.truth_table[j][i+1]=binary_value[j]
     
@@ -66,6 +63,7 @@ class ODV_3:
 
   def print_minimize(self):
     self.d_result.minimizer.minimize_sdnf_raschetny(self.d_result.sdnf_builder.get_minterms())
+    print("minimized bout:")
     self.bout_result.minimizer.minimize_sdnf_raschetny(self.bout_result.sdnf_builder.get_minterms())
 
   def print_sdnf(self):

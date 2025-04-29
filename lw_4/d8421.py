@@ -5,7 +5,7 @@ class D8421:
     def __init__(self):
         self.all_values = [self._get_binary_value(i, 4) for i in range(10)]
         self.n = self._get_binary_value(6, 4)
-        print("All values:", self.all_values)
+        self.D8421_n()
 
     def _get_binary_value(self, value, length) -> str:
         if value == 0:
@@ -57,8 +57,10 @@ class D8421:
               sdnf.pop()
               return "".join(sdnf)
           return "0"
+    def print_result(self):
+        print("D8421:\t\tD8421+6:")
+        for i in range(10):
+            print (self.all_values[i],'\t\t',self.result_plus_n[i])
 
-# Создаем экземпляр класса и вызываем метод n_add()
 d = D8421()
-print("Результат сложения с n = 6 (0110):", d.D8421_n())
-print(d.D8421_n_sdnf())
+d.print_result()
