@@ -62,9 +62,9 @@ class ODV_3:
 
 
   def print_minimize(self):
-    self.d_result.minimizer.minimize_sdnf_raschetny(self.d_result.sdnf_builder.get_minterms())
+    self.d_result.minimizer.karnaugh_map_sdnf(self.d_result.sdnf_builder.get_minterms())
     print("minimized bout:")
-    self.bout_result.minimizer.minimize_sdnf_raschetny(self.bout_result.sdnf_builder.get_minterms())
+    self.bout_result.minimizer.karnaugh_map_sdnf(self.bout_result.sdnf_builder.get_minterms())
 
   def print_sdnf(self):
     print("СДНФ:")
