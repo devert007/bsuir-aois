@@ -54,7 +54,7 @@ class LogicProcessor:
                     elif char == ">":
                         rez = str(int(not op1 or op2))
                     elif char == "/":
-                        rez = str(int(op1!= op2))
+                        rez = str(int(op1 != op2))
                     elif char == "~":
                         rez = str(int(op1 == op2))
                     if col == 1:
