@@ -1,258 +1,187 @@
-class Logic_operator:
-    def __init__(self,func_str:str):
-        self.operaions_array=["&",">","|","!","~"]
-        self.letters_array=["a","b","c","d"]
-        self.func_str=func_str
-        self.new_letters_list=[]
+from enum import Enum
+from typing import List, Dict
 
-        for i in self.func_str:
-            if (i not in self.operaions_array) & (i not in self.new_letters_list)&(i in self.letters_array):
-                self.new_letters_list.append(i)
-        self.truth_table = []
-        #заполняем нулями, пример: [a, 0,0,0,0,0]
-        for i in range(0,len(self.new_letters_list),1):
-            self.truth_table.append([0]*(pow(2,len(self.new_letters_list))+1))
-            self.truth_table[i][0]=self.new_letters_list[i]
-        
+class Operator(Enum):
+    AND = "&"
+    OR = "|"
+    IMPLIES = ">"
+    NOT = "!"
+    EQUIV = "~"
 
-        print(f"Итоговая таблица с переменными:\n{''.join(self.new_letters_list)}")
+class LogicProcessor:
+    def __init__(self, expression: str):
+        self.operators = {op.value for op in Operator}
+        self.variables = {"a", "b", "c", "d"}
+        self.expression = expression
+        self.var_list = sorted({c for c in expression if c in self.variables and c not in self.operators})
+        self.table = self._init_table()
+        self.rpn = self._build_rpn()
+        self._populate_table()
+        self._display_table()
 
-        for i in range(0,pow(2,len(self.new_letters_list)),1):
-            binary_value=self.get_binary_value(i,len(self.new_letters_list))
-            print(binary_value)
-            for j in range(0,len(self.new_letters_list),1):
-                self.truth_table[j][i+1]=binary_value[j]
-        print(self.truth_table)
+    def _init_table(self) -> List[List[str]]:
+        rows = len(self.var_list)
+        cols = 2**rows + 1
+        table = [[None] * cols for _ in range(rows)]
+        for i, var in enumerate(self.var_list):
+            table[i][0] = var
+        return table
 
-        #create OPZ
-        self.turn_to_opz()
-        print(f"OPZ:{self.opz}")
-        #truth_table of all
-        self.create_truth_table()
-        self.print_truth_table()
+    def _to_binary(self, num: int, length: int) -> str:
+        return format(num, f"0{length}b")
 
+    def _populate_table(self):
+        rows = len(self.var_list)
+        for i in range(2**rows):
+            binary = self._to_binary(i, rows)
+            for j, bit in enumerate(binary):
+                self.table[j][i + 1] = bit
 
-  
-    def get_binary_value(self,value,length)->str:
-        direct_binary = ''
-        abs_value= abs(value)
-        while abs_value > 0 :
-            direct_binary= str(abs_value % 2)+direct_binary
-            abs_value = abs_value // 2 
-        if len(direct_binary)<length:
-            direct_binary=direct_binary.zfill(length)
-        return direct_binary
+    def _build_rpn(self) -> str:
+        precedence = {
+            Operator.NOT.value: 3,
+            Operator.AND.value: 2,
+            Operator.OR.value: 2,
+            Operator.IMPLIES.value: 2,
+            Operator.EQUIV.value: 2,
+            "(": 1,
+        }
+        stack = []
+        output = []
+        for char in self.expression:
+            if char in self.var_list:
+                output.append(char)
+            elif char == "(":
+                stack.append(char)
+            elif char == ")":
+                while stack and stack[-1] != "(":
+                    output.append(stack.pop())
+                stack.pop()  # Remove "("
+            elif char in self.operators:
+                while stack and precedence.get(stack[-1], 0) >= precedence[char]:
+                    output.append(stack.pop())
+                stack.append(char)
+        while stack:
+            output.append(stack.pop())
+        print(f"RPN: {''.join(output)}")
+        return "".join(output)
 
+    def _evaluate_rpn(self, values: Dict[str, int]) -> int:
+        stack = []
+        for char in self.rpn:
+            if char in self.var_list:
+                stack.append(values[char])
+            elif char == Operator.NOT.value:
+                val = stack.pop()
+                stack.append(0 if val == 1 else 1)
+            else:
+                b, a = stack.pop(), stack.pop()
+                if char == Operator.AND.value:
+                    stack.append(a & b)
+                elif char == Operator.OR.value:
+                    stack.append(a | b)
+                elif char == Operator.IMPLIES.value:
+                    stack.append(1 if not a or b else 0)
+                elif char == Operator.EQUIV.value:
+                    stack.append(1 if a == b else 0)
+        return stack[0]
 
-    def turn_to_opz(self):
-        def priority(char_el):
-            match char_el:
-                case '>':return 2
-                case '&':return 2
-                case '|':return 2
-                case '~':return 2
-                case '!':return 3
-                case '(':return 1
-            return 0
-        stack_list=[]
-        self.opz=""
-        for char_el in self.func_str:
-            if char_el =='(' :
-                stack_list.append(char_el)
-            if char_el==')':
-                while(stack_list[-1]!='('):
-                    self.opz=self.opz+stack_list[-1]
-                    stack_list.pop()
-                stack_list.pop()
-            if char_el in self.new_letters_list:
-                self.opz=self.opz+char_el
-            if char_el in self.operaions_array:
-                while stack_list!=[] and priority(stack_list[-1])>=priority(char_el):
-                    self.opz=self.opz+stack_list[-1]
-                    stack_list.pop()
-                stack_list.append(char_el)
-        while stack_list!=[]:
-            self.opz=self.opz+stack_list[-1]
-            stack_list.pop()
-        return self.opz
+    def _populate_table(self):
+        rows = len(self.var_list)
+        total_rows = rows
+        for col in range(1, 2**rows + 1):
+            values = {self.table[i][0]: int(self.table[i][col]) for i in range(rows)}
+            result = self._evaluate_rpn(values)
+            if col == 1:
+                self.table.append([None] * (2**rows + 1))
+                self.table[-1][0] = self.expression
+            self.table[total_rows][col] = str(result)
 
-    def create_truth_table(self):
-        stack_list=[]
-        val_dict={}
-        
-        for num_str in range(1,len(self.truth_table[0]),1):
-            count_operaions_array=len(self.new_letters_list)-1
-            for col in range(0,len(self.truth_table),1):
-                val_dict[self.truth_table[col][0]]=self.truth_table[col][num_str]
-            for char_el in self.opz :
-                if char_el in self.new_letters_list:
-                    stack_list.append(char_el)
-                elif char_el=='!':
-                    
+    def _display_table(self):
+        print(f"Variables: {''.join(self.var_list)}")
+        for i in range(2**len(self.var_list)):
+            print(self._to_binary(i, len(self.var_list)))
+        header = " ".join(row[0] for row in self.table)
+        print(header)
+        for col in range(1, 2**len(self.var_list) + 1):
+            row = " ".join(row[col] for row in self.table)
+            print(row)
 
-                    op1=int(val_dict[stack_list[-1]])
-                    if op1==1 : 
-                        rez = "0" 
-                    else: 
-                        rez="1"
-                    if num_str==1:
-                        self.truth_table.append([0]*(pow(2,len(self.new_letters_list))+1))
-                        self.truth_table[len(self.truth_table )-1][0]=char_el+stack_list[-1]
-                    count_operaions_array+=1
-                    self.truth_table[count_operaions_array][num_str]=rez
-                    val_dict[self.truth_table[count_operaions_array][0]]=self.truth_table[count_operaions_array][num_str]
-                    stack_list.append(char_el+stack_list[-1])
-                    stack_list.pop(-2)
-                    
+    def get_sdnf(self) -> str:
+        result = []
+        for col in range(1, 2**len(self.var_list) + 1):
+            if self.table[-1][col] == "1":
+                term = []
+                for i, var in enumerate(self.var_list):
+                    val = self.table[i][col]
+                    if val == "0":
+                        term.append(f"!{var}")
+                    else:
+                        term.append(var)
+                result.append(f"({'&'.join(term)})")
+        return f"({'|'.join(result)})" if result else "()"
+
+    def get_sknf(self) -> str:
+        result = []
+        for col in range(1, 2**len(self.var_list) + 1):
+            if self.table[-1][col] == "0":
+                term = []
+                for i, var in enumerate(self.var_list):
+                    val = self.table[i][col]
+                    if val == "1":
+                        term.append(f"!{var}")
+                    else:
+                        term.append(var)
+                result.append(f"({'|'.join(term)})")
+        return f"({'&'.join(result)})" if result else "()"
+
+    def get_index_form(self) -> int:
+        result = "".join(self.table[-1][1:])
+        return int(result, 2)
+
+class LogicInterface:
+    def __init__(self):
+        self.processor = None
+
+    def display_menu(self):
+        print("\n=== Logic Evaluator ===")
+        print("1. Enter expression and show truth table")
+        print("2. Generate SDNF")
+        print("3. Generate SKNF")
+        print("4. Compute index form")
+        print("5. Exit")
+        return input("Select option (1-5): ")
+
+    def run(self):
+        while True:
+            choice = self.display_menu()
+            if choice == "1":
+                expr = input("Enter logical expression (use a,b,c,d and &,|,>,!,~): ")
+                try:
+                    self.processor = LogicProcessor(expr)
+                    print("Truth table generated!")
+                except Exception as e:
+                    print(f"Invalid expression: {e}")
+            elif choice == "2":
+                if not self.processor:
+                    print("Please enter an expression first.")
                 else:
-                    op1=int(val_dict[stack_list[0]])
-                    op2=int(val_dict[stack_list[1]])
-                    match(char_el):
-                        case '&': rez=str(op1 * op2)
-                        case'|': rez= str(op1 | op2)
-                        case'>': rez=str(int(not (bool(op1)) or bool(op2)))
-                        case'~':rez=str(int(op1==op2))
-                    if num_str==1:
-                        self.truth_table.append([0]*(pow(2,len(self.new_letters_list))+1))
-                        self.truth_table[len(self.truth_table)-1][0]=stack_list[0]+char_el+stack_list[1]
-                    count_operaions_array+=1
-                    self.truth_table[count_operaions_array][num_str]=rez
-                    val_dict[self.truth_table[count_operaions_array][0]]=self.truth_table[count_operaions_array][num_str]
-                    stack_list.append(stack_list[0]+char_el+stack_list[1])
-                    stack_list.pop(1)
-                    stack_list.pop(0)
-            stack_list.clear()
-            val_dict.clear()
-    def print_truth_table(self):
-        truth_table_head = str(self.truth_table[0][0])
-        for i in range(1,len(self.truth_table),1):
-            truth_table_head+=' ' +self.truth_table[i][0]
-        print(truth_table_head)
-        for i in range(1, len(self.truth_table[0])): 
-                row_values =''  
-                for row in self.truth_table:
-                    row_values += row[i] + ' '  
-                print(row_values.rstrip())
-
-
-    def build_sdnf_str(self):
-        sdnf_valueForm=["("]
-        sdnf=[]
-        for num_str in range(0,len(self.truth_table[0])-1,1):
-            if self.truth_table[len(self.truth_table)-1][num_str+1]=="1":
-                sdnf_valueForm.append(str(num_str))
-                sdnf_valueForm.append(",")
-                sdnf.append("(")
-                for col_number in range(0,len((self.new_letters_list)),1):
-                    if self.truth_table[col_number][num_str+1]== "0":
-                        sdnf.append("!")
-                    sdnf.append(self.truth_table[col_number][0])
-                    sdnf.append("&")
-                sdnf.pop()
-                sdnf.append(")")
-                sdnf.append("|")
-        sdnf.pop()
-        sdnf_valueForm.pop()
-        sdnf_valueForm.append(")")
-        sdnf_valueForm.append("|")
-        return str(sdnf)
-        # print(str(sdnf_valueForm)) 
-   
-    def build_sknf_str(self):
-        sknf_valueForm=["("]
-        sknf=[]
-        for num_str in range(0,len(self.truth_table[0])-1,1):
-            if self.truth_table[len(self.truth_table)-1][num_str+1]=="0":
-                sknf_valueForm.append(str(num_str))
-                sknf_valueForm.append(",")
-                sknf.append("(")
-                for col_number in range(0,len((self.new_letters_list)),1):
-                    if self.truth_table[col_number][num_str+1]== "1":
-                        sknf.append("!")
-                    sknf.append(self.truth_table[col_number][0])
-                    sknf.append("|")
-                sknf.pop()
-                sknf.append(")")
-                sknf.append("&")
-        sknf.pop()
-        sknf_valueForm.pop()
-        sknf_valueForm.append(")")
-        sknf_valueForm.append("&")
-        return str(sknf)
-        # print(str(sknf_valueForm))    
-    def binary_to_decimal(self,value):
-        result =0
-        degree=0
-        for i in range(len(value)-1,-1,-1):
-            result += int(value[i])*2**degree
-            degree+=1
-        return result
-    def rez_index_form(self):
-        rez=""
-        for num_str in range(1,len(self.truth_table[0]),1):
-            rez+=self.truth_table[len(self.truth_table)-1][num_str]
-
-        return self.binary_to_decimal(rez)
-
-
-
-
-
-
-
-
-def menu():
-    print("\n=== Меню ===")
-    print("1. ввести функцию и вывести таблицу истинности")
-    print("2.SDNF ")
-    print("3.SKNF ")
-    print("4. Индексная форма ")
-    print("5. Выйти")
-    return input("ВВОД (1-5): ")
-
-def main():
-    current_logic = None
-    
-    while True:
-        choice = menu()
-        
-        if choice == "1":
-            expression = input("Введите функцию (используйте a,b,c,d и операторы &,|,>,!,~): ")
-            try:
-                current_logic = Logic_operator(expression)
-                print("\nTТаблица истинности создана!")
-            except Exception as e:
-                print(f"Error in expression: {e}")
-                
-        elif choice == "2":
-            if current_logic is None:
-                print("Сначала введите функцию")
+                    print(f"SDNF: {self.processor.get_sdnf()}")
+            elif choice == "3":
+                if not self.processor:
+                    print("Please enter an expression first.")
+                else:
+                    print(f"SKNF: {self.processor.get_sknf()}")
+            elif choice == "4":
+                if not self.processor:
+                    print("Please enter an expression first.")
+                else:
+                    print(f"Index form: {self.processor.get_index_form()}")
+            elif choice == "5":
+                print("Exiting...")
+                break
             else:
-                sdnf = current_logic.build_sdnf_str()
-                print(f"SDNF: {sdnf}")
-                
-        elif choice == "3":
-            if current_logic is None:
-                print("Сначала введите функцию")
-            else:
-                sknf = current_logic.build_sknf_str()
-                print(f"SKNF: {sknf}")
-                
-        elif choice == "4":
-            if current_logic is None:
-                print("Сначала введите функцию")
-            else:
-                index = current_logic.rez_index_form()
-                print(f"Индексная форма (Decimal): {index}")
-                
-        elif choice == "5":
-            print("Goodbye!")
-            break
-            
-        else:
-            print("Invalid choice! Please select 1-5")
+                print("Invalid option. Choose 1-5.")
 
-
-
-main()
-
+if __name__ == "__main__":
+    LogicInterface().run()
