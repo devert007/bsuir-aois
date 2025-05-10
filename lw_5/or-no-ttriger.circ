@@ -63,100 +63,69 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <wire from="(740,220)" to="(740,610)"/>
     <wire from="(730,270)" to="(730,660)"/>
     <wire from="(140,200)" to="(140,340)"/>
-    <wire from="(110,320)" to="(110,400)"/>
     <wire from="(750,680)" to="(750,770)"/>
-    <wire from="(750,500)" to="(750,590)"/>
-    <wire from="(110,400)" to="(670,400)"/>
-    <wire from="(750,500)" to="(790,500)"/>
     <wire from="(750,680)" to="(790,680)"/>
+    <wire from="(190,400)" to="(190,480)"/>
     <wire from="(830,680)" to="(870,680)"/>
-    <wire from="(140,110)" to="(140,200)"/>
-    <wire from="(360,130)" to="(780,130)"/>
     <wire from="(460,840)" to="(750,840)"/>
-    <wire from="(200,110)" to="(240,110)"/>
-    <wire from="(200,130)" to="(240,130)"/>
-    <wire from="(200,150)" to="(240,150)"/>
     <wire from="(140,200)" to="(170,200)"/>
-    <wire from="(830,500)" to="(1040,500)"/>
     <wire from="(850,730)" to="(850,770)"/>
     <wire from="(310,220)" to="(330,220)"/>
-    <wire from="(870,170)" to="(870,590)"/>
-    <wire from="(1040,500)" to="(1040,790)"/>
     <wire from="(150,240)" to="(170,240)"/>
     <wire from="(1030,590)" to="(1030,780)"/>
+    <wire from="(830,590)" to="(1030,590)"/>
     <wire from="(1030,780)" to="(1120,780)"/>
     <wire from="(1140,750)" to="(1230,750)"/>
-    <wire from="(160,170)" to="(870,170)"/>
-    <wire from="(780,520)" to="(790,520)"/>
     <wire from="(850,770)" to="(860,770)"/>
     <wire from="(150,270)" to="(730,270)"/>
     <wire from="(730,660)" to="(870,660)"/>
     <wire from="(740,610)" to="(790,610)"/>
     <wire from="(670,400)" to="(670,790)"/>
     <wire from="(750,770)" to="(750,840)"/>
-    <wire from="(780,130)" to="(780,520)"/>
     <wire from="(750,590)" to="(750,680)"/>
     <wire from="(750,770)" to="(790,770)"/>
     <wire from="(750,590)" to="(790,590)"/>
     <wire from="(1020,770)" to="(1120,770)"/>
-    <wire from="(830,590)" to="(870,590)"/>
     <wire from="(1020,680)" to="(1020,770)"/>
-    <wire from="(160,150)" to="(160,170)"/>
     <wire from="(420,310)" to="(420,340)"/>
     <wire from="(870,660)" to="(870,680)"/>
     <wire from="(150,240)" to="(150,270)"/>
     <wire from="(680,730)" to="(850,730)"/>
-    <wire from="(140,110)" to="(170,110)"/>
     <wire from="(830,770)" to="(850,770)"/>
-    <wire from="(1040,790)" to="(1120,790)"/>
-    <wire from="(300,130)" to="(330,130)"/>
+    <wire from="(190,400)" to="(670,400)"/>
     <wire from="(870,680)" to="(1020,680)"/>
     <wire from="(140,340)" to="(420,340)"/>
-    <wire from="(150,130)" to="(150,240)"/>
-    <wire from="(870,590)" to="(1030,590)"/>
-    <wire from="(150,130)" to="(170,130)"/>
     <wire from="(860,760)" to="(1120,760)"/>
     <wire from="(720,700)" to="(790,700)"/>
-    <wire from="(160,150)" to="(170,150)"/>
     <wire from="(420,310)" to="(690,310)"/>
+    <wire from="(190,480)" to="(200,480)"/>
     <wire from="(420,340)" to="(680,340)"/>
-    <wire from="(860,770)" to="(870,770)"/>
-    <comp lib="0" loc="(460,840)" name="Clock"/>
-    <comp lib="1" loc="(200,240)" name="NOT Gate"/>
-    <comp lib="1" loc="(200,200)" name="NOT Gate"/>
-    <comp lib="4" loc="(830,770)" name="T Flip-Flop">
-      <a name="label" val="T1"/>
-    </comp>
-    <comp lib="1" loc="(360,220)" name="NOT Gate"/>
-    <comp lib="4" loc="(830,590)" name="T Flip-Flop">
-      <a name="label" val="T3"/>
-    </comp>
-    <comp lib="1" loc="(200,130)" name="NOT Gate"/>
-    <comp lib="1" loc="(360,130)" name="NOT Gate"/>
-    <comp lib="0" loc="(110,320)" name="Power"/>
     <comp lib="4" loc="(830,680)" name="T Flip-Flop">
       <a name="label" val="T2"/>
     </comp>
-    <comp lib="1" loc="(310,220)" name="NAND Gate">
-      <a name="inputs" val="2"/>
-    </comp>
     <comp lib="1" loc="(720,700)" name="NOT Gate"/>
-    <comp lib="1" loc="(200,110)" name="NOT Gate"/>
+    <comp lib="4" loc="(830,590)" name="T Flip-Flop">
+      <a name="label" val="T3"/>
+    </comp>
+    <comp lib="1" loc="(200,200)" name="NOT Gate"/>
     <comp lib="0" loc="(1230,750)" name="Probe">
       <a name="facing" val="west"/>
       <a name="radix" val="10unsigned"/>
     </comp>
-    <comp lib="4" loc="(830,500)" name="T Flip-Flop">
-      <a name="label" val="T4"/>
+    <comp lib="1" loc="(310,220)" name="NAND Gate">
+      <a name="inputs" val="2"/>
     </comp>
-    <comp lib="1" loc="(300,130)" name="NAND Gate">
-      <a name="inputs" val="3"/>
-    </comp>
+    <comp lib="0" loc="(460,840)" name="Clock"/>
     <comp lib="0" loc="(1140,750)" name="Splitter">
       <a name="facing" val="west"/>
-      <a name="fanout" val="4"/>
-      <a name="incoming" val="4"/>
+      <a name="fanout" val="3"/>
+      <a name="incoming" val="3"/>
     </comp>
-    <comp lib="1" loc="(200,150)" name="NOT Gate"/>
+    <comp lib="1" loc="(200,240)" name="NOT Gate"/>
+    <comp lib="0" loc="(200,480)" name="Power"/>
+    <comp lib="1" loc="(360,220)" name="NOT Gate"/>
+    <comp lib="4" loc="(830,770)" name="T Flip-Flop">
+      <a name="label" val="T1"/>
+    </comp>
   </circuit>
 </project>

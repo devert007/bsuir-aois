@@ -3,7 +3,7 @@ from minimizer import Minimizer
 
 class DownCounterTTrigger:
     def __init__(self):
-        self.literals = ['a', 'b', 'c', 'd']  # Align with D8421's variable naming
+        self.literals = ['a', 'b', 'c', 'd'] 
         self.transition_table = self.build_transition_table()
         self.minimize_excitation_functions()
 
@@ -22,7 +22,6 @@ class DownCounterTTrigger:
                         q3 = (next_decimal // 4) % 2
                         q2 = (next_decimal // 2) % 2
                         q1 = next_decimal % 2
-                        # T-trigger excitation: 1 if state changes, 0 if stays same
                         t3 = 1 if q3_star != q3 else 0
                         t2 = 1 if q2_star != q2 else 0
                         t1 = 1 if q1_star != q1 else 0
@@ -31,7 +30,7 @@ class DownCounterTTrigger:
 
     def print_transition_table(self):
         print("Transition and Excitation Table:")
-        print("a   b   c   d | q3 q2 q1 | T3 T2 T1")
+        print("a   b   c   d | q3 q2 q1 | h3 h2 h1")
         for row in self.transition_table:
             inputs, outputs, excitations = row
             print(f"{inputs[0]}   {inputs[1]}   {inputs[2]}   {inputs[3]} | "
@@ -50,14 +49,14 @@ class DownCounterTTrigger:
                     else:
                         term.append(literal)
                     term.append("&")
-                term.pop()  # Remove last "&"
+                term.pop()  
                 sdnf.append("(" + "".join(term) + ")")
                 sdnf.append("|")
         
         if sdnf:
-            sdnf.pop()  # Remove last "|"
+            sdnf.pop()  
             return "".join(sdnf)
-        return "0"  # Return "0" if no minterms
+        return "0" 
 
     def minimize_excitation_functions(self):
         self.print_transition_table()
@@ -82,3 +81,8 @@ class DownCounterTTrigger:
 
 if __name__ == "__main__":
     counter = DownCounterTTrigger()
+
+## таблица H - это таблица возбуждения памяти 
+## hi - сигнал возбуждения определяются так, если входное a/b/c = q3/q2/q1, то Ti = 0, если поменялось состояние тригера изменилось на противоположное то ставим 1
+## d - входной счетчик автомата
+##
