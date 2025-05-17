@@ -1,3 +1,30 @@
+from collections import deque
+
+def print_tree_bfs(root, nil):
+    if root == nil:
+        print("Tree is empty")
+        return
+    
+    queue = deque([root])
+    while queue:
+        level_size = len(queue)
+        current_level = []
+        for _ in range(level_size):
+            node = queue.popleft()
+            if node == nil:
+                current_level.append("NIL")
+            else:
+                color = 'R' if node.color == Color.RED else 'B'
+                current_level.append(f"{node.key}({color})")
+                queue.append(node.left)
+                queue.append(node.right)
+        
+        if all(elem == "NIL" for elem in current_level):
+            break
+        
+        print(" | ".join(current_level))
+
+
 class Color:
     RED = 0
     BLACK = 1
@@ -224,14 +251,14 @@ if __name__ == "__main__":
         rbt.insert(value)
     
     print("\nTree structure after insertions:")
-    print_tree(rbt.root, rbt.NIL)
+    print_tree_bfs(rbt.root, rbt.NIL)
     
     print("\nSearching for values:")
-    print("Search 15:", rbt.search(15))  
-    print("Search 100:", rbt.search(100))  
+    print("Search 15:", rbt.search(15))  # True
+    print("Search 100:", rbt.search(100))  # False
     
     print("\nDeleting value 20")
     rbt.delete(20)
     
     print("\nTree structure after deleting 20:")
-    print_tree(rbt.root, rbt.NIL)
+    print_tree_bfs(rbt.root, rbt.NIL)

@@ -116,31 +116,31 @@ if __name__ == "__main__":
     word = read_word_by_index(matrix, 1, rows, cols)
     print(word)
 
-    print("\nПрименение функций к столбцам 0 и 1:")
-    col1 = read_bit_column(matrix, 0, rows, cols)
-    col2 = read_bit_column(matrix, 1, rows, cols)
-    results = apply_functions_to_columns(col1, col2)
-    for func_name, result in results.items():
-        print(f"{func_name}: {result}")
+    # print("\nПрименение функций к столбцам 0 и 1:")
+    # col1 = read_bit_column(matrix, 0, rows, cols)
+    # col2 = read_bit_column(matrix, 1, rows, cols)
+    # results = apply_functions_to_columns(col1, col2)
+    # for func_name, result in results.items():
+    #     print(f"{func_name}: {result}")
 
-    print("\nИндексы строк с максимальным значением:")
-    max_indices = find_extremum(matrix, rows, cols, find_max=True)
-    print(max_indices)
+    # print("\nИндексы строк с максимальным значением:")
+    # max_indices = find_extremum(matrix, rows, cols, find_max=True)
+    # print(max_indices)
 
-    print("\nИндексы строк с минимальным значением:")
-    min_indices = find_extremum(matrix, rows, cols, find_max=False)
-    print(min_indices)
+    # print("\nИндексы строк с минимальным значением:")
+    # min_indices = find_extremum(matrix, rows, cols, find_max=False)
+    # print(min_indices)
 
-    print("\nСложение полей A и B для V=111:")
-    matrix = add_fields(matrix, "111", rows)
-    print_matrix(matrix)
+    # print("\nСложение полей A и B для V=111:")
+    # matrix = add_fields(matrix, "111", rows)
+    # print_matrix(matrix)
 
-    print("\nМатрица после упорядоченной выборки (по убыванию):")
-    sorted_indices = ordered_selection(matrix, rows, cols, find_max=True)
-    sorted_matrix = [matrix[i] for i in sorted_indices]
-    print_matrix(sorted_matrix)
+    # print("\nМатрица после упорядоченной выборки (по убыванию):")
+    # sorted_indices = ordered_selection(matrix, rows, cols, find_max=True)
+    # sorted_matrix = [matrix[i] for i in sorted_indices]
+    # print_matrix(sorted_matrix)
 
-    print("\nМатрица после упорядоченной выборки (по возрастанию):")
-    sorted_indices = ordered_selection(matrix, rows, cols, find_max=False)
-    sorted_matrix = [matrix[i] for i in sorted_indices]
-    print_matrix(sorted_matrix)
+    # print("\nМатрица после упорядоченной выборки (по возрастанию):")
+    # sorted_indices = ordered_selection(matrix, rows, cols, find_max=False)
+    # sorted_matrix = [matrix[i] for i in sorted_indices]
+    # print_matrix(sorted_matrix)
