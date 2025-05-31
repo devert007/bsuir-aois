@@ -12,14 +12,14 @@ def print_tree_bfs(root, nil):
         for _ in range(level_size):
             node = queue.popleft()
             if node == nil:
-                current_level.append("NIL")
+                current_level.append("NULL")
             else:
                 color = 'R' if node.color == Color.RED else 'B'
                 current_level.append(f"{node.key}({color})")
                 queue.append(node.left)
                 queue.append(node.right)
         
-        if all(elem == "NIL" for elem in current_level):
+        if all(elem == "NULL" for elem in current_level):
             break
         
         print(" | ".join(current_level))
